@@ -475,7 +475,7 @@ export const RESERVED_FIELD_CATALOG: readonly TReservedFieldCatalogEntry[] = [
     name: "screenWidth",
     dataType: "number",
     availability: "client",
-    privacy: "keep",
+    privacy: "drop",
     display: "secondary",
     read: (r) => r.meta.screenWidth,
   },
@@ -483,7 +483,7 @@ export const RESERVED_FIELD_CATALOG: readonly TReservedFieldCatalogEntry[] = [
     name: "screenHeight",
     dataType: "number",
     availability: "client",
-    privacy: "keep",
+    privacy: "drop",
     display: "secondary",
     read: (r) => r.meta.screenHeight,
   },
@@ -491,7 +491,7 @@ export const RESERVED_FIELD_CATALOG: readonly TReservedFieldCatalogEntry[] = [
     name: "viewportWidth",
     dataType: "number",
     availability: "client",
-    privacy: "keep",
+    privacy: "drop",
     display: "secondary",
     read: (r) => r.meta.viewportWidth,
   },
@@ -499,7 +499,7 @@ export const RESERVED_FIELD_CATALOG: readonly TReservedFieldCatalogEntry[] = [
     name: "viewportHeight",
     dataType: "number",
     availability: "client",
-    privacy: "keep",
+    privacy: "drop",
     display: "secondary",
     read: (r) => r.meta.viewportHeight,
   },
@@ -512,7 +512,7 @@ export const RESERVED_FIELD_CATALOG: readonly TReservedFieldCatalogEntry[] = [
     name: "timezone",
     dataType: "string",
     availability: "client",
-    privacy: "keep",
+    privacy: "drop",
     display: "secondary",
     read: (r) => r.meta.timezone,
   },
@@ -521,16 +521,12 @@ export const RESERVED_FIELD_CATALOG: readonly TReservedFieldCatalogEntry[] = [
    * different field from `language`, which is the language they *answered* in: a German speaker
    * taking an English-only survey has `locale: "de-DE"` and `language: "en"`, and the gap between
    * the two is the reason to capture both — it is what "should we translate this survey?" asks.
-   *
-   * `keep`: a UI language preference is a device setting the browser advertises to every site, not
-   * something the respondent disclosed about themselves. Same call as `timezone`, which it sits
-   * beside in every runtime that can report either.
    */
   {
     name: "locale",
     dataType: "string",
     availability: "client",
-    privacy: "keep",
+    privacy: "drop",
     display: "secondary",
     read: (r) => r.meta.locale,
   },

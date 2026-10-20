@@ -16,6 +16,12 @@ const buildFullMeta = (): TResponseMeta => ({
   country: "DE",
   action: "clicked-cta",
   ipAddress: "203.0.113.7",
+  screenWidth: 1920,
+  screenHeight: 1080,
+  viewportWidth: 1200,
+  viewportHeight: 800,
+  timezone: "Europe/Berlin",
+  locale: "en-US",
 });
 
 describe("applyAnonymizePolicy", () => {
@@ -39,6 +45,13 @@ describe("applyAnonymizePolicy", () => {
     // `drop`: the key is absent, not blank — that is what makes the field resolve as unset.
     expect(anonymized).not.toHaveProperty("country");
     expect(anonymized).not.toHaveProperty("ipAddress");
+    // Device geometry and environment fingerprinting fields are dropped.
+    expect(anonymized).not.toHaveProperty("screenWidth");
+    expect(anonymized).not.toHaveProperty("screenHeight");
+    expect(anonymized).not.toHaveProperty("viewportWidth");
+    expect(anonymized).not.toHaveProperty("viewportHeight");
+    expect(anonymized).not.toHaveProperty("timezone");
+    expect(anonymized).not.toHaveProperty("locale");
     // The whole userAgent object goes, because browser/os/deviceType are all `drop`.
     expect(anonymized).not.toHaveProperty("userAgent");
 
@@ -217,6 +230,12 @@ describe("a suppressed reserved field resolves as unset", () => {
     expect(projected).not.toHaveProperty("os");
     expect(projected).not.toHaveProperty("deviceType");
     expect(projected).not.toHaveProperty("ipAddress");
+    expect(projected).not.toHaveProperty("screenWidth");
+    expect(projected).not.toHaveProperty("screenHeight");
+    expect(projected).not.toHaveProperty("viewportWidth");
+    expect(projected).not.toHaveProperty("viewportHeight");
+    expect(projected).not.toHaveProperty("timezone");
+    expect(projected).not.toHaveProperty("locale");
     // Not suppressed, so still projected — proving the omissions above are the policy, not a broken read.
     expect(projected.source).toBe("link");
     expect(projected.url).toBe("https://example.com/survey");

@@ -800,32 +800,32 @@ describe("RESERVED_FIELD_CATALOG", () => {
         name: "screenWidth",
         dataType: "number",
         availability: "client",
-        privacy: "keep",
+        privacy: "drop",
         display: "secondary",
       },
       {
         name: "screenHeight",
         dataType: "number",
         availability: "client",
-        privacy: "keep",
+        privacy: "drop",
         display: "secondary",
       },
       {
         name: "viewportWidth",
         dataType: "number",
         availability: "client",
-        privacy: "keep",
+        privacy: "drop",
         display: "secondary",
       },
       {
         name: "viewportHeight",
         dataType: "number",
         availability: "client",
-        privacy: "keep",
+        privacy: "drop",
         display: "secondary",
       },
-      { name: "timezone", dataType: "string", availability: "client", privacy: "keep", display: "secondary" },
-      { name: "locale", dataType: "string", availability: "client", privacy: "keep", display: "secondary" },
+      { name: "timezone", dataType: "string", availability: "client", privacy: "drop", display: "secondary" },
+      { name: "locale", dataType: "string", availability: "client", privacy: "drop", display: "secondary" },
     ]);
   });
 

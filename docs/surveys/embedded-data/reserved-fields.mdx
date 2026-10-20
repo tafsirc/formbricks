@@ -88,9 +88,9 @@ The **Anonymize responses** toggle in the survey editor's **Settings** tab, unde
 
 | With the toggle on         | Fields                                                                                                                                                                                    |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Not captured**           | `country`, `ipAddress`, `browser`, `os`, `deviceType`                                                                                                                                     |
+| **Not captured**           | `country`, `ipAddress`, `browser`, `os`, `deviceType`, `screenWidth`, `screenHeight`, `viewportWidth`, `viewportHeight`, `timezone`, `locale`                                           |
 | **Query string stripped**  | `url`, `pageReferrer`                                                                                                                                                                     |
-| **Captured unchanged**     | `source`, `action`, `pagePath`, all five `utm*`, `screenWidth`, `screenHeight`, `viewportWidth`, `viewportHeight`, `timezone`, `locale`, `language`, `finished`, `durationSeconds`, `startedAt`, `finishedAt`, `responseId`, `surveyId` |
+| **Captured unchanged**     | `source`, `action`, `pagePath`, all five `utm*`, `language`, `finished`, `durationSeconds`, `startedAt`, `finishedAt`, `responseId`, `surveyId`                                            |
 
 A suppressed field resolves as **unset**, never as an empty string or a stale value, so `#recall:country/fallback:unknown#` shows `unknown` and a logic condition on it simply does not match.
 
@@ -100,12 +100,9 @@ Turning the toggle on also disables **Capture IP address** for that survey, beca
 
 <Warning>
   **"Anonymize" here means "no direct identifiers", not "not re-identifiable".** The toggle removes the IP
-  address, the country and the parsed device details, and strips query strings from captured URLs. It does
-  **not** coarsen the fields it keeps, and `screenWidth` + `screenHeight` + `viewportWidth` +
-  `viewportHeight` + `timezone` + `locale` taken together are a browser fingerprint that can narrow a
-  respondent down further than `browser: "Chrome"` ever could. Those fields are kept because they are what
-  makes response analysis useful, but if your threat model is re-identification rather than direct
-  identifiers, do not treat this toggle as sufficient on its own.
+  address, the country, the parsed device details, screen and viewport dimensions, timezone, and locale,
+  and strips query strings from captured URLs. If your threat model is strict re-identification rather than
+  standard direct identifiers and device telemetry, do not treat this toggle as sufficient on its own.
 </Warning>
 
 ### Query Stripping Is Not Only for Anonymized Surveys

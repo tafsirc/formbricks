@@ -133,6 +133,12 @@ test.describe("Anonymize responses @slow", () => {
         expect(meta).not.toHaveProperty("country");
         expect(meta).not.toHaveProperty("userAgent");
         expect(meta).not.toHaveProperty("ipAddress");
+        expect(meta).not.toHaveProperty("screenWidth");
+        expect(meta).not.toHaveProperty("screenHeight");
+        expect(meta).not.toHaveProperty("viewportWidth");
+        expect(meta).not.toHaveProperty("viewportHeight");
+        expect(meta).not.toHaveProperty("timezone");
+        expect(meta).not.toHaveProperty("locale");
       }).toPass({ timeout: 30000 });
     });
 
@@ -206,6 +212,12 @@ test.describe("Anonymize responses @slow", () => {
       country: "DE",
       userAgent: { browser: "Chrome", os: "macOS", device: "desktop" },
       ipAddress: "203.0.113.7",
+      screenWidth: 1920,
+      screenHeight: 1080,
+      viewportWidth: 1200,
+      viewportHeight: 800,
+      timezone: "Europe/Berlin",
+      locale: "en-US",
     };
 
     const expectAnonymized = async (responseId: string): Promise<void> => {
@@ -220,6 +232,12 @@ test.describe("Anonymize responses @slow", () => {
       expect(meta).not.toHaveProperty("country");
       expect(meta).not.toHaveProperty("userAgent");
       expect(meta).not.toHaveProperty("ipAddress");
+      expect(meta).not.toHaveProperty("screenWidth");
+      expect(meta).not.toHaveProperty("screenHeight");
+      expect(meta).not.toHaveProperty("viewportWidth");
+      expect(meta).not.toHaveProperty("viewportHeight");
+      expect(meta).not.toHaveProperty("timezone");
+      expect(meta).not.toHaveProperty("locale");
       // `keep` fields still arrive — the policy suppresses, it does not blank the object.
       expect(meta.source).toBe("link");
     };
