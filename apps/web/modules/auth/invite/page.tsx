@@ -57,6 +57,7 @@ export const InvitePage = async (props: InvitePageProps) => {
     if (!session) {
       const redirectUrl = WEBAPP_URL + "/invite?token=" + searchParams.token;
       const encodedEmail = encodeURIComponent(email);
+      const encodedRedirectUrl = encodeURIComponent(redirectUrl);
       return (
         <ContentLayout
           headline={t("auth.invite.happy_to_have_you")}
@@ -67,7 +68,7 @@ export const InvitePage = async (props: InvitePageProps) => {
             </Link>
           </Button>
           <Button asChild>
-            <Link href={`/auth/login?callbackUrl=${redirectUrl}&email=${encodedEmail}`}>
+            <Link href={`/auth/login?callbackUrl=${encodedRedirectUrl}&email=${encodedEmail}`}>
               {t("auth.invite.login")}
             </Link>
           </Button>
@@ -87,9 +88,7 @@ export const InvitePage = async (props: InvitePageProps) => {
       );
     }
 
-    const createMembershipAction = async () => {
-      "use server";
-
+    const acceptInvite = async () => {
       if (!session || !user) return;
 
       await createMembership(invite.organizationId, session.user.id, {
@@ -106,13 +105,6 @@ export const InvitePage = async (props: InvitePageProps) => {
           user.id
         );
       }
-      await deleteInvite(inviteId);
-      await sendInviteAcceptedEmail(
-        invite.creator.name ?? "",
-        user?.name ?? "",
-        invite.creator.email,
-        invite.creator.locale
-      );
       await updateUser(session.user.id, {
         notificationSettings: {
           ...user.notificationSettings,
@@ -125,11 +117,26 @@ export const InvitePage = async (props: InvitePageProps) => {
           ),
         },
       });
+      await sendInviteAcceptedEmail(
+        invite.creator.name ?? "",
+        user.name || session.user.name || "",
+        invite.creator.email,
+        invite.creator.locale
+      );
+      await deleteInvite(inviteId);
     };
 
-    after(async () => {
-      await createMembershipAction();
-    });
+    try {
+      after(async () => {
+        try {
+          await acceptInvite();
+        } catch (error) {
+          logger.error(error, "Error accepting invite in InvitePage after-hook");
+        }
+      });
+    } catch {
+      await acceptInvite();
+    }
 
     return (
       <ContentLayout
