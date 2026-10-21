@@ -7,6 +7,7 @@ import type { TSingleCondition } from "@formbricks/types/surveys/logic";
 import type { TSurvey } from "@formbricks/types/surveys/types";
 import type { TComboboxGroupedOption, TComboboxOption } from "@/modules/ui/components/input-combo-box";
 import {
+  extractParts,
   getActionValueOptions,
   getActionVariableOptions,
   getConditionOperatorOptions,
@@ -580,5 +581,23 @@ describe("operators that take no right-hand side", () => {
     expect(getMatchValueProps(condition({ type: "hiddenField", value: "plan" }, operator), typed, t)).toEqual(
       { show: false, options: [] }
     );
+  });
+});
+
+describe("extractParts", () => {
+  test("preserves empty slashes (/\\) as plain text without extracting an empty part", () => {
+    expect(extractParts("hello /\\ world")).toEqual(["hello /\\ world"]);
+    expect(extractParts("/\\")).toEqual(["/\\"]);
+    expect(extractParts("foo /\\ bar /\\ baz")).toEqual(["foo /\\ bar /\\ baz"]);
+  });
+
+  test("extracts valid recall tokens while preserving adjacent plain text", () => {
+    expect(extractParts("hello /name\\ world")).toEqual(["hello ", "name", " world"]);
+    expect(extractParts("/name\\")).toEqual(["", "name"]);
+    expect(extractParts("hello /\\ world /name\\ bye")).toEqual(["hello /\\ world ", "name", " bye"]);
+  });
+
+  test("ignores empty or whitespace-only tokens inside slashes", () => {
+    expect(extractParts("hello /   \\ world")).toEqual(["hello /   \\ world"]);
   });
 });

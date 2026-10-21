@@ -60,38 +60,45 @@ export const scrollElementCardIntoView = (elementId: string, block: ScrollLogica
 
 export const extractParts = (text: string): string[] => {
   const parts: string[] = [];
+  let lastIndex = 0;
   let i = 0;
 
   if (text.length > MAX_STRING_LENGTH) {
     // If the text is unexpectedly too long, return it as a single part
-    parts.push(text);
-    return parts;
+    return [text];
   }
 
   while (i < text.length) {
     const start = text.indexOf("/", i);
     if (start === -1) {
-      // No more `/`, push the rest and break
-      parts.push(text.slice(i));
       break;
     }
     const end = text.indexOf("\\", start + 1);
     if (end === -1) {
-      // No matching `\`, treat as plain text
-      parts.push(text.slice(i));
       break;
     }
-    // Add text before the match
-    if (start > i) {
-      parts.push(text.slice(i, start));
+
+    const nextSlash = text.indexOf("/", start + 1);
+    if (nextSlash !== -1 && nextSlash < end) {
+      i = nextSlash;
+      continue;
     }
-    // Add the highlighted part (without `/` and `\`)
-    parts.push(text.slice(start + 1, end));
-    // Move past the `\`
+
+    const content = text.slice(start + 1, end);
+    if (!content.trim() || content.includes("\n") || content.includes("\r")) {
+      i = start + 1;
+      continue;
+    }
+
+    parts.push(text.slice(lastIndex, start));
+    parts.push(content);
+    lastIndex = end + 1;
     i = end + 1;
   }
 
-  if (parts.length === 0) {
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  } else if (parts.length === 0) {
     parts.push(text);
   }
 
