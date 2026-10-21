@@ -20,10 +20,11 @@ export const SurveyInline = (props: Omit<SurveyContainerProps, "containerId">) =
     [props.recaptchaSiteKey]
   );
 
-  const renderInline = useCallback(
-    () => window.formbricksSurveys.renderSurvey({ ...props, containerId, getRecaptchaToken, mode: "inline" }),
-    [containerId, props, getRecaptchaToken]
-  );
+  const renderInline = useCallback(() => {
+    if (typeof window !== "undefined" && typeof window.formbricksSurveys?.renderSurvey === "function") {
+      window.formbricksSurveys.renderSurvey({ ...props, containerId, getRecaptchaToken, mode: "inline" });
+    }
+  }, [containerId, props, getRecaptchaToken]);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const hasLoadedRef = useRef(false);
 
@@ -60,7 +61,7 @@ export const SurveyInline = (props: Omit<SurveyContainerProps, "containerId">) =
     }
 
     const loadScript = async () => {
-      if (!window.formbricksSurveys) {
+      if (!window.formbricksSurveys?.renderSurvey) {
         try {
           if (props.isSpamProtectionEnabled && props.recaptchaSiteKey) {
             await loadRecaptchaScript(props.recaptchaSiteKey);
